@@ -7,13 +7,13 @@ from classes.parser import Parser
 from utils import get_vm_files_to_process
 
 
-def main(input_vm_path: str) -> None:
+def main(raw_input_vm_path: str) -> None:
     """
     Main function for the VM translator.
 
     Args
     ----
-    input_vm_path (str): The path to the VM file / folder that requires translation.
+    raw_input_vm_path (str): The path to the VM file / folder that requires translation.
 
     Returns
     -------
@@ -24,9 +24,9 @@ def main(input_vm_path: str) -> None:
     An ".asm" file in the same path as the VM file / folder.
 
     """
-    input_vm = pathlib.Path(input_vm_path)
-    output_asm_file_path = str(input_vm.parent) + "\\" + input_vm.stem + ".asm"
-    vm_files_to_process = get_vm_files_to_process(input_vm)
+    input_vm_path = pathlib.Path(raw_input_vm_path)
+    output_asm_file_path = str(input_vm_path.parent) + "\\" + input_vm_path.stem + ".asm"
+    vm_files_to_process = get_vm_files_to_process(input_vm_path)
 
     all_translated_lines = []
     for vm_file_to_process in vm_files_to_process:
