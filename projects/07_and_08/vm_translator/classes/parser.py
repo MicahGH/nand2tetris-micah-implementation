@@ -4,7 +4,7 @@ import logging
 
 from pathlib import Path
 
-from models.base import BaseCommand, CommandSpecifierType, CommandType
+from models.base import BaseCommand, CommandSpecifierType, BaseCommandType
 from models.mapping import COMMAND_TYPE_COMMAND_CLASS_MAP
 
 logging.basicConfig(level=logging.INFO)
@@ -28,7 +28,7 @@ class Parser:
         return True
 
     def get_command_class(
-        self, command: CommandType, command_specifier: CommandSpecifierType | None
+        self, command: BaseCommandType, command_specifier: CommandSpecifierType | None
     ) -> type[BaseCommand]:
         """Get the command class for the command in the current line."""
         command_class = COMMAND_TYPE_COMMAND_CLASS_MAP.get(command)
@@ -43,13 +43,19 @@ class Parser:
         else:
             return command_class
 
-    def get_command_type(self, command: str) -> CommandType:
+    def get_command_type(self, command: str) -> BaseCommandType:
         """Get the command type for the command in the current line."""
-        try:
-            return CommandType(command)
-        except Exception:
-            msg = f"No CommandType found for command type: {command}"
+        command_type_subclasses = BaseCommandType.__subclasses__()
+        command_type = None
+        for command_type_subclass in command_type_subclasses:
+            try:
+                command_type = command_type_subclass(command)
+            except Exception:
+                continue
+        if command_type is None:
+            msg = f"No suitable command type found for command: {command}"
             raise ValueError(msg)
+        return command_type
 
     def get_command_specifier_type(
         self, command_specifier: str

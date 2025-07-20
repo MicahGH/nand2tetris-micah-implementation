@@ -4,23 +4,9 @@ from enum import Enum
 from pydantic import BaseModel
 
 
-class CommandType(str, Enum):
+class BaseCommandType(str, Enum):
     """Enum for the distinct VM command types."""
-
-    # Arithmetic command types
-    ADD = "add"
-    SUB = "sub"
-    NEG = "neg"
-    EQ = "eq"
-    GT = "gt"
-    LT = "lt"
-    AND = "and"
-    OR = "or"
-    NOT = "not"
-    # Memory access command types
-    PUSH = "push"
-    POP = "pop"
-
+    ...
 
 class CommandSpecifierType(str, Enum):
     CONSTANT = "constant"
@@ -36,7 +22,7 @@ class CommandSpecifierType(str, Enum):
 class BaseCommand(BaseModel):
     """Abstract base class for the VM commands."""
 
-    command: CommandType
+    command: BaseCommandType
     command_specifier: CommandSpecifierType | str | None = None
     command_value: int | None = None
     unparsed_command_line: str

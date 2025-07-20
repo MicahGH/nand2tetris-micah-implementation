@@ -2,13 +2,18 @@ import logging
 from typing import Self
 
 from pydantic import model_validator
-from models.base import BaseCommand, CommandSpecifierType
+from models.base import BaseCommand, BaseCommandType, CommandSpecifierType
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+class MemoryAccessCommandType(BaseCommandType):
+    PUSH = "push"
+    POP = "pop"
+
 
 class BaseMemoryAccessCommand(BaseCommand):
+    command: MemoryAccessCommandType # type: ignore[reportGeneralTypeIssues]
     command_specifier: CommandSpecifierType  # type: ignore[reportGeneralTypeIssues]
     command_value: int  # type: ignore[reportGeneralTypeIssues]
 

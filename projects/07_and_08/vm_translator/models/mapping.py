@@ -1,6 +1,7 @@
 from models.arithmetic import (
     AddCommand,
     AndCommand,
+    ArithmeticCommandType,
     EqCommand,
     GtCommand,
     LtCommand,
@@ -9,8 +10,9 @@ from models.arithmetic import (
     OrCommand,
     SubCommand,
 )
-from models.base import BaseCommand, CommandSpecifierType, CommandType
+from models.base import BaseCommand, CommandSpecifierType, BaseCommandType
 from models.memory_access import (
+    MemoryAccessCommandType,
     PopCommand,
     PopPointerCommand,
     PopStaticCommand,
@@ -23,25 +25,25 @@ from models.memory_access import (
 )
 
 COMMAND_TYPE_COMMAND_CLASS_MAP: dict[
-    CommandType, type[BaseCommand] | dict[CommandSpecifierType | str, type[BaseCommand]]
+    BaseCommandType, type[BaseCommand] | dict[CommandSpecifierType | str, type[BaseCommand]]
 ] = {
-    CommandType.ADD: AddCommand,
-    CommandType.SUB: SubCommand,
-    CommandType.NOT: NotCommand,
-    CommandType.AND: AndCommand,
-    CommandType.OR: OrCommand,
-    CommandType.NEG: NegCommand,
-    CommandType.EQ: EqCommand,
-    CommandType.GT: GtCommand,
-    CommandType.LT: LtCommand,
-    CommandType.PUSH: {
+    ArithmeticCommandType.ADD: AddCommand,
+    ArithmeticCommandType.SUB: SubCommand,
+    ArithmeticCommandType.NOT: NotCommand,
+    ArithmeticCommandType.AND: AndCommand,
+    ArithmeticCommandType.OR: OrCommand,
+    ArithmeticCommandType.NEG: NegCommand,
+    ArithmeticCommandType.EQ: EqCommand,
+    ArithmeticCommandType.GT: GtCommand,
+    ArithmeticCommandType.LT: LtCommand,
+    MemoryAccessCommandType.PUSH: {
         CommandSpecifierType.POINTER: PushPointerCommand,
         CommandSpecifierType.CONSTANT: PushConstantCommand,
         CommandSpecifierType.TEMP: PushTempCommand,
         CommandSpecifierType.STATIC: PushStaticCommand,
         "default": PushCommand,
     },
-    CommandType.POP: {
+    MemoryAccessCommandType.POP: {
         CommandSpecifierType.POINTER: PopPointerCommand,
         CommandSpecifierType.TEMP: PopTempCommand,
         CommandSpecifierType.STATIC: PopStaticCommand,
