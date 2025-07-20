@@ -1,0 +1,15 @@
+// Created by Micah
+
+CHIP DMux8Way16 {
+    IN in[16], sel[3];
+    OUT a[16], b[16], c[16], d[16], e[16], f[16], g[16], h[16];
+
+    PARTS:
+    DMux16(in=in,sel=sel[2],a=out2a,b=out2b);
+    DMux16(in=out2a,sel=sel[1],a=out1aa,b=out1ab);
+    DMux16(in=out2b,sel=sel[1],a=out1ba,b=out1bb);
+    DMux16(in=out1aa,sel=sel[0],a=a,b=b);
+    DMux16(in=out1ab,sel=sel[0],a=c,b=d);
+    DMux16(in=out1ba,sel=sel[0],a=e,b=f);
+    DMux16(in=out1bb,sel=sel[0],a=g,b=h);
+}
