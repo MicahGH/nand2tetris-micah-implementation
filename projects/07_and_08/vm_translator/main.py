@@ -1,17 +1,19 @@
 """Main function for the VM translator."""
 
+import pathlib
 from fire import Fire
 from classes.code_writer import CodeWriter
 from classes.parser import Parser
+from utils import get_vm_files_to_process
 
 
-def main(input_vm_file_path: str) -> None:
+def main(input_vm_path: str) -> None:
     """
     Main function for the VM translator.
 
     Args
     ----
-    input_vm_file_path (str): The full path to the VM file that requires translation.
+    input_vm_path (str): The path to the VM file / folder that requires translation.
 
     Returns
     -------
@@ -19,13 +21,19 @@ def main(input_vm_file_path: str) -> None:
 
     Outputs
     -------
-    An ".asm" file in the same path as the VM file.
+    An ".asm" file in the same path as the VM file / folder.
 
     """
-    vm_parser = Parser(input_vm_file_path=input_vm_file_path)
-    translated_lines = vm_parser.parse_file()
-    output_asm_file_path = input_vm_file_path.replace(".vm", ".asm")
-    code_writer = CodeWriter(output_asm_file_path, translated_lines)
+    input_vm = pathlib.Path(input_vm_path)
+    output_asm_file_path = str(input_vm.parent) + "\\" + input_vm.stem + ".asm"
+    vm_files_to_process = get_vm_files_to_process(input_vm)
+
+    all_translated_lines = []
+    for vm_file_to_process in vm_files_to_process:
+        vm_parser = Parser(input_vm_file_path=vm_file_to_process)
+        translated_lines = vm_parser.parse_file()
+        all_translated_lines.extend(translated_lines)
+    code_writer = CodeWriter(output_asm_file_path, all_translated_lines)
     code_writer.write_file()
 
 
