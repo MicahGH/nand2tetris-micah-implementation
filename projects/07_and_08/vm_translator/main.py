@@ -25,7 +25,9 @@ def main(raw_input_vm_path: str) -> None:
 
     """
     input_vm_path = pathlib.Path(raw_input_vm_path)
-    output_asm_file_path = str(input_vm_path.parent) + "\\" + input_vm_path.stem + ".asm"
+    output_asm_file_path = (
+        str(input_vm_path.parent) + "\\" + input_vm_path.stem + ".asm"
+    )
     vm_files_to_process = get_vm_files_to_process(input_vm_path)
 
     all_translated_lines = []

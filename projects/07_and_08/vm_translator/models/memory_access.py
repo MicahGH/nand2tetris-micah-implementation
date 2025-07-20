@@ -7,13 +7,14 @@ from models.base import BaseCommand, BaseCommandType, CommandSpecifierType
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class MemoryAccessCommandType(BaseCommandType):
     PUSH = "push"
     POP = "pop"
 
 
 class BaseMemoryAccessCommand(BaseCommand):
-    command: MemoryAccessCommandType # type: ignore[reportGeneralTypeIssues]
+    command: MemoryAccessCommandType  # type: ignore[reportGeneralTypeIssues]
     command_specifier: CommandSpecifierType  # type: ignore[reportGeneralTypeIssues]
     command_value: int  # type: ignore[reportGeneralTypeIssues]
 
@@ -99,6 +100,7 @@ class PushTempCommand(BaseMemoryAccessCommand):
             + increment_pointer_addr
         ]
 
+
 class PushConstantCommand(BaseMemoryAccessCommand):
     def translate_to_asm(self) -> list[str]:
         select_value = f"""
@@ -122,6 +124,7 @@ class PushConstantCommand(BaseMemoryAccessCommand):
             + set_selected_pointer_addr
             + increment_pointer_addr
         ]
+
 
 class PushPointerCommand(BasePointerCommand):
     def translate_to_asm(self) -> list[str]:
@@ -147,7 +150,8 @@ class PushPointerCommand(BasePointerCommand):
             + set_selected_pointer_addr
             + increment_pointer_addr
         ]
-    
+
+
 class PushStaticCommand(BaseMemoryAccessCommand):
     def translate_to_asm(self) -> list[str]:
         get_value_from_segment = f"""
@@ -216,6 +220,7 @@ class PopCommand(BaseMemoryAccessCommand):
             + pop_value_to_segment
         ]
 
+
 class PopTempCommand(BaseMemoryAccessCommand):
     def translate_to_asm(self) -> list[str]:
         select_value = f"""
@@ -253,6 +258,7 @@ class PopTempCommand(BaseMemoryAccessCommand):
             + pop_value_to_segment
         ]
 
+
 class PopPointerCommand(BasePointerCommand):
     def translate_to_asm(self) -> list[str]:
         segment = self.POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP[self.command_value]
@@ -284,6 +290,7 @@ class PopPointerCommand(BasePointerCommand):
             + get_value_in_pointer
             + pop_value_to_segment
         ]
+
 
 class PopStaticCommand(BaseMemoryAccessCommand):
     def translate_to_asm(self) -> list[str]:

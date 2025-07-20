@@ -25,7 +25,8 @@ from models.memory_access import (
 )
 
 COMMAND_TYPE_COMMAND_CLASS_MAP: dict[
-    BaseCommandType, type[BaseCommand] | dict[CommandSpecifierType | str, type[BaseCommand]]
+    BaseCommandType,
+    type[BaseCommand] | dict[CommandSpecifierType | str, type[BaseCommand]],
 ] = {
     ArithmeticCommandType.ADD: AddCommand,
     ArithmeticCommandType.SUB: SubCommand,

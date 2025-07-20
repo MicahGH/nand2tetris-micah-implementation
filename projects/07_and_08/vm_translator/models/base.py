@@ -6,7 +6,9 @@ from pydantic import BaseModel
 
 class BaseCommandType(str, Enum):
     """Enum for the distinct VM command types."""
+
     ...
+
 
 class CommandSpecifierType(str, Enum):
     CONSTANT = "constant"

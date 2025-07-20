@@ -4,6 +4,7 @@ from models.base import BaseCommand, BaseCommandType
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class ArithmeticCommandType(BaseCommandType):
     ADD = "add"
     SUB = "sub"
@@ -15,8 +16,9 @@ class ArithmeticCommandType(BaseCommandType):
     OR = "or"
     NOT = "not"
 
+
 class BaseArithmeticCommand(BaseCommand):
-    command: ArithmeticCommandType # type: ignore[reportGeneralTypeIssues]
+    command: ArithmeticCommandType  # type: ignore[reportGeneralTypeIssues]
     # These are never needed in arithmetic commands
     # so they are set to always be None
     command_specifier: None  # type: ignore[reportGeneralTypeIssues]
