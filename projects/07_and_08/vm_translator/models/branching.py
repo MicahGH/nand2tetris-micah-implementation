@@ -18,3 +18,10 @@ class LabelCommand(BaseBranchingCommand):
     def translate_to_asm(self):
         create_label = f"({self.command_specifier})"
         return [create_label]
+
+
+class GotoCommand(BaseBranchingCommand):
+    def translate_to_asm(self):
+        address_label = f"@{self.command_specifier}"
+        create_goto = "0;JMP"
+        return [address_label + create_goto]

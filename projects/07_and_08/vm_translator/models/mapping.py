@@ -11,7 +11,7 @@ from models.arithmetic import (
     SubCommand,
 )
 from models.base import BaseCommand, CommandSpecifierType, BaseCommandType
-from models.branching import BranchingCommandType, LabelCommand
+from models.branching import BranchingCommandType, GotoCommand, LabelCommand
 from models.memory_access import (
     MemoryAccessCommandType,
     PopCommand,
@@ -52,4 +52,5 @@ COMMAND_TYPE_COMMAND_CLASS_MAP: dict[
         "default": PopCommand,
     },
     BranchingCommandType.LABEL: LabelCommand,
+    BranchingCommandType.GOTO: GotoCommand,
 }
