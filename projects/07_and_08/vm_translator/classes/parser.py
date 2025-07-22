@@ -103,7 +103,7 @@ class Parser:
             for raw_line in vm_file:
                 current_line: str = raw_line.strip()
 
-                if not self.is_command_line(current_line):
+                if self.is_command_line(current_line):
                     continue
 
                 command, command_specifier, command_value = self.split_command_line(
