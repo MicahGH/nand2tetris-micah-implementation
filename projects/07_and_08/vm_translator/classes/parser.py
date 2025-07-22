@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 
 from models.base import BaseCommand, CommandSpecifierType, BaseCommandType
+from models.branching import BranchingCommandType
 from models.mapping import COMMAND_TYPE_COMMAND_CLASS_MAP
 
 logging.basicConfig(level=logging.INFO)
@@ -28,7 +29,7 @@ class Parser:
         return True
 
     def get_command_class(
-        self, command: BaseCommandType, command_specifier: CommandSpecifierType | None
+        self, command: BaseCommandType, command_specifier: CommandSpecifierType | str | None
     ) -> type[BaseCommand]:
         """Get the command class for the command in the current line."""
         command_class = COMMAND_TYPE_COMMAND_CLASS_MAP.get(command)
@@ -58,9 +59,11 @@ class Parser:
         return command_type
 
     def get_command_specifier_type(
-        self, command_specifier: str
-    ) -> CommandSpecifierType:
+        self, command: BaseCommandType, command_specifier: str
+    ) -> CommandSpecifierType | str:
         """Get the command specifier type for the command specifier in the current line."""
+        if isinstance(command, BranchingCommandType):
+            return command_specifier
         try:
             return CommandSpecifierType(command_specifier)
         except Exception:
@@ -71,7 +74,8 @@ class Parser:
         self, command_line: str
     ) -> tuple[str, str | None, int | None]:
         """Split the command line into its parts and return the data as a tuple."""
-        command_line_parts = command_line.split(" ")
+        command_line_partition = command_line.partition("//")
+        command_line_parts = command_line_partition[0].split(maxsplit=3)
         match len(command_line_parts):
             case 1:
                 command = command_line_parts[0]
@@ -83,7 +87,7 @@ class Parser:
                 command, command_specifier, command_value = command_line_parts
                 return command, command_specifier, int(command_value)
             case _:
-                msg = f"Command line: {command_line} has more than 3 parts."
+                msg = f"Command line: {command_line} cannot be properly split into its parts."
                 raise ValueError(msg)
 
     def parse_file(self) -> list[str]:
@@ -106,7 +110,7 @@ class Parser:
                 command_specifier = None if not command_specifier else command_specifier
                 if command_specifier is not None:
                     command_specifier = self.get_command_specifier_type(
-                        command_specifier
+                        command, command_specifier
                     )
 
                 CommandClass = self.get_command_class(command, command_specifier)
@@ -120,6 +124,7 @@ class Parser:
                 )
                 translated_lines.extend(
                     parsed_command.get_line_comment()
+                    + ["\n"]
                     + parsed_command.translate_to_asm()
                     + ["\n"]
                 )
