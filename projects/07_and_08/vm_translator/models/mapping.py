@@ -12,6 +12,7 @@ from models.arithmetic import (
 )
 from models.base import BaseCommand, CommandSpecifierType, BaseCommandType
 from models.branching import BranchingCommandType, GoToCommand, IfGoToCommand, LabelCommand
+from models.function import CallCommand, FunctionCommand, FunctionCommandType, ReturnCommand
 from models.memory_access import (
     MemoryAccessCommandType,
     PopCommand,
@@ -54,4 +55,7 @@ COMMAND_TYPE_COMMAND_CLASS_MAP: dict[
     BranchingCommandType.LABEL: LabelCommand,
     BranchingCommandType.GOTO: GoToCommand,
     BranchingCommandType.IF_GOTO: IfGoToCommand,
+    FunctionCommandType.FUNCTION: FunctionCommand,
+    FunctionCommandType.CALL: CallCommand,
+    FunctionCommandType.RETURN: ReturnCommand,
 }
