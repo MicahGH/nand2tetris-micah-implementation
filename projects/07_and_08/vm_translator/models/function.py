@@ -118,7 +118,6 @@ class FunctionCommand(BaseFunctionCommand):
         insert_function_label = f"""
         ({self.command_specifier})
         """
-        local_vars_to_push: list[str] = []
         push_local_var = """
         @R0
         D=M
@@ -130,7 +129,7 @@ class FunctionCommand(BaseFunctionCommand):
         @SP
         M=M+1
         """
-        local_vars_to_push = [push_local_var for i in range(self.command_value)]
+        local_vars_to_push = [push_local_var for _ in range(self.command_value)]
 
         return [insert_function_label, *local_vars_to_push]
 
