@@ -15,10 +15,11 @@ class BaseFunctionCommand(BaseCommand):
     command_specifier: str # type: ignore[reportGeneralTypeIssues]
     command_value: int # type: ignore[reportGeneralTypeIssues]
 
-class FunctionCommand(BaseFunctionCommand):
-    pass
 
 class CallCommand(BaseFunctionCommand):
+    pass
+
+class FunctionCommand(BaseFunctionCommand):
     pass
 
 class ReturnCommand(BaseFunctionCommand):

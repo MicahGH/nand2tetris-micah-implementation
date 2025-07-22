@@ -55,7 +55,7 @@ COMMAND_TYPE_COMMAND_CLASS_MAP: dict[
     BranchingCommandType.LABEL: LabelCommand,
     BranchingCommandType.GOTO: GoToCommand,
     BranchingCommandType.IF_GOTO: IfGoToCommand,
-    FunctionCommandType.FUNCTION: FunctionCommand,
     FunctionCommandType.CALL: CallCommand,
+    FunctionCommandType.FUNCTION: FunctionCommand,
     FunctionCommandType.RETURN: ReturnCommand,
 }
