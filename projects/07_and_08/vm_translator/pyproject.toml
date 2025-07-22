@@ -20,3 +20,12 @@ build-backend = "poetry.core.masonry.api"
 ruff = "^0.12.3"
 black = "^25.1.0"
 
+[tool.ruff]
+line-length = 105
+[lint.select]
+select = ["ALL"]
+[lint.ignore]
+ignore = ["D101", "D104", "D102", "D100", "S112", "BLE001", "RUF005"]
+
+[tool.black]
+line-length = 105

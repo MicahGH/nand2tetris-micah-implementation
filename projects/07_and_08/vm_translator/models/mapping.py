@@ -10,9 +10,19 @@ from models.arithmetic import (
     OrCommand,
     SubCommand,
 )
-from models.base import BaseCommand, CommandSpecifierType, BaseCommandType
-from models.branching import BranchingCommandType, GoToCommand, IfGoToCommand, LabelCommand
-from models.function import CallCommand, FunctionCommand, FunctionCommandType, ReturnCommand
+from models.base import BaseCommand, BaseCommandType, CommandSpecifierType
+from models.branching import (
+    BranchingCommandType,
+    GoToCommand,
+    IfGoToCommand,
+    LabelCommand,
+)
+from models.function import (
+    CallCommand,
+    FunctionCommand,
+    FunctionCommandType,
+    ReturnCommand,
+)
 from models.memory_access import (
     MemoryAccessCommandType,
     PopCommand,

@@ -1,4 +1,5 @@
 import logging
+
 from models.base import BaseCommand, BaseCommandType
 
 logging.basicConfig(level=logging.INFO)

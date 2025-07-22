@@ -1,21 +1,22 @@
 """Main function for the VM translator."""
 
-import pathlib
+from pathlib import Path
+
 from fire import Fire
+
 from classes.code_writer import CodeWriter
 from classes.parser import Parser
 from utils import get_vm_files_to_process
 
 
 def main(raw_input_vm_path: str) -> None:
-    """
-    Main function for the VM translator.
+    """Call the main function for the VM translator.
 
-    Args
+    Args:
     ----
     raw_input_vm_path (str): The path to the VM file / folder that requires translation.
 
-    Returns
+    Returns:
     -------
     None
 
@@ -24,10 +25,8 @@ def main(raw_input_vm_path: str) -> None:
     An ".asm" file in the same path as the VM file / folder.
 
     """
-    input_vm_path = pathlib.Path(raw_input_vm_path)
-    output_asm_file_path = (
-        str(input_vm_path.parent) + "\\" + input_vm_path.stem + ".asm"
-    )
+    input_vm_path = Path(raw_input_vm_path)
+    output_asm_file_path = Path(str(input_vm_path.parent) + "\\" + input_vm_path.stem + ".asm")
     vm_files_to_process = get_vm_files_to_process(input_vm_path)
 
     all_translated_lines = []

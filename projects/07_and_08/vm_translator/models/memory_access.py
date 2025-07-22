@@ -2,10 +2,17 @@ import logging
 from typing import Self
 
 from pydantic import model_validator
+
 from models.base import BaseCommand, BaseCommandType, CommandSpecifierType
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP: dict[int, CommandSpecifierType] = {
+    0: CommandSpecifierType.THIS,
+    1: CommandSpecifierType.THAT,
+}
 
 
 class MemoryAccessCommandType(BaseCommandType):
@@ -22,19 +29,11 @@ class BaseMemoryAccessCommand(BaseCommand):
 
 
 class BasePointerCommand(BaseMemoryAccessCommand):
-    POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP: dict[int, CommandSpecifierType] = {
-        0: CommandSpecifierType.THIS,
-        1: CommandSpecifierType.THAT,
-    }
-
     @model_validator(mode="after")
     def check_pointer_value(self) -> Self:
-        if (
-            self.command_value
-            not in self.POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP.keys()
-        ):
+        if self.command_value not in POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP:
             msg = f"Invalid push pointer command value: {self.command_value}. "
-            msg = f"Valid values: {self.POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP.keys()}"
+            msg = f"Valid values: {POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP.keys()}"
             raise ValueError(msg)
         return self
 
@@ -66,7 +65,7 @@ class PushCommand(BaseMemoryAccessCommand):
             + get_value_from_segment
             + get_current_pointer_addr
             + set_selected_pointer_addr
-            + increment_pointer_addr
+            + increment_pointer_addr,
         ]
 
 
@@ -97,7 +96,7 @@ class PushTempCommand(BaseMemoryAccessCommand):
             + get_value_from_segment
             + get_current_pointer_addr
             + set_selected_pointer_addr
-            + increment_pointer_addr
+            + increment_pointer_addr,
         ]
 
 
@@ -119,16 +118,13 @@ class PushConstantCommand(BaseMemoryAccessCommand):
         M=M+1
         """
         return [
-            select_value
-            + get_current_pointer_addr
-            + set_selected_pointer_addr
-            + increment_pointer_addr
+            select_value + get_current_pointer_addr + set_selected_pointer_addr + increment_pointer_addr,
         ]
 
 
 class PushPointerCommand(BasePointerCommand):
     def translate_to_asm(self) -> list[str]:
-        segment = self.POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP[self.command_value]
+        segment = POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP[self.command_value]
         get_value_from_segment = f"""
         @{segment.name}
         D=M
@@ -148,7 +144,7 @@ class PushPointerCommand(BasePointerCommand):
             get_value_from_segment
             + get_current_pointer_addr
             + set_selected_pointer_addr
-            + increment_pointer_addr
+            + increment_pointer_addr,
         ]
 
 
@@ -173,7 +169,7 @@ class PushStaticCommand(BaseMemoryAccessCommand):
             get_value_from_segment
             + get_current_pointer_addr
             + set_selected_pointer_addr
-            + increment_pointer_addr
+            + increment_pointer_addr,
         ]
 
 
@@ -217,7 +213,7 @@ class PopCommand(BaseMemoryAccessCommand):
             + save_ram_location
             + decrement_pointer_addr
             + get_value_in_pointer
-            + pop_value_to_segment
+            + pop_value_to_segment,
         ]
 
 
@@ -255,13 +251,13 @@ class PopTempCommand(BaseMemoryAccessCommand):
             + save_ram_location
             + decrement_pointer_addr
             + get_value_in_pointer
-            + pop_value_to_segment
+            + pop_value_to_segment,
         ]
 
 
 class PopPointerCommand(BasePointerCommand):
     def translate_to_asm(self) -> list[str]:
-        segment = self.POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP[self.command_value]
+        segment = POINTER_COMMAND_VALUE_COMMAND_SPECIFIER_MAP[self.command_value]
         get_ram_location = f"""
         @{segment.name}
         D=A
@@ -288,7 +284,7 @@ class PopPointerCommand(BasePointerCommand):
             + save_ram_location
             + decrement_pointer_addr
             + get_value_in_pointer
-            + pop_value_to_segment
+            + pop_value_to_segment,
         ]
 
 
@@ -321,5 +317,5 @@ class PopStaticCommand(BaseMemoryAccessCommand):
             + save_ram_location
             + decrement_pointer_addr
             + get_value_in_pointer
-            + pop_value_to_segment
+            + pop_value_to_segment,
         ]
