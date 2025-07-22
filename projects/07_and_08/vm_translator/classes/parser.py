@@ -6,6 +6,7 @@ from pathlib import Path
 
 from models.base import BaseCommand, CommandSpecifierType, BaseCommandType
 from models.branching import BranchingCommandType
+from models.function import FunctionCommandType
 from models.mapping import COMMAND_TYPE_COMMAND_CLASS_MAP
 
 logging.basicConfig(level=logging.INFO)
@@ -62,7 +63,7 @@ class Parser:
         self, command: BaseCommandType, command_specifier: str
     ) -> CommandSpecifierType | str:
         """Get the command specifier type for the command specifier in the current line."""
-        if isinstance(command, BranchingCommandType):
+        if isinstance(command, BranchingCommandType) or isinstance(command, FunctionCommandType):
             return command_specifier
         try:
             return CommandSpecifierType(command_specifier)
