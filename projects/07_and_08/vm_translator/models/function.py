@@ -95,7 +95,8 @@ class CallCommand(BaseFunctionCommand):
         M=D
         """
         goto_function = f"""
-        goto {self.command_specifier}
+        @{self.command_specifier}
+        0;JMP
         """
         insert_return_address_label = f"""
         ({return_address_label})
@@ -120,7 +121,7 @@ class FunctionCommand(BaseFunctionCommand):
         """
         push_local_var = """
         @R0
-        D=M
+        D=A
 
         @SP
         A=M
@@ -140,4 +141,114 @@ class ReturnCommand(BaseFunctionCommand):
     command_value: None  # type: ignore[reportGeneralTypeIssues]
 
     def translate_to_asm(self) -> list[str]:
-        return []
+        end_frame_var_name = "end_frame"
+        return_address_var_name = "return_address"
+        get_end_frame = f"""
+        @LCL
+        D=M
+        @{end_frame_var_name}
+        M=D
+        """
+
+        get_return_address = f"""
+        @R5
+        D=A
+
+        @{end_frame_var_name}
+        D=M-D
+        A=D
+        D=M
+
+        @{return_address_var_name}
+        M=D
+        """
+        pop_top_value_to_arg = """
+        @SP
+        M=M-1
+
+        A=M
+        D=M
+
+        @ARG
+        A=M
+        M=D
+        """
+        reposition_sp = """
+        @ARG
+        D=M+1
+
+        @SP
+        M=D
+        """
+        recover_that = f"""
+        @R1
+        D=A
+
+        @{end_frame_var_name}
+        D=M-D
+
+        @temp_var_that
+        A=D
+        D=M
+
+        @THAT
+        M=D
+        """
+        recover_this = f"""
+        @R2
+        D=A
+
+        @{end_frame_var_name}
+        D=M-D
+
+        @temp_var_this
+        A=D
+        D=M
+
+        @THIS
+        M=D
+        """
+        recover_arg = f"""
+        @R3
+        D=A
+
+        @{end_frame_var_name}
+        D=M-D
+
+        @temp_var_arg
+        A=D
+        D=M
+
+        @ARG
+        M=D
+        """
+        recover_lcl = f"""
+        @R4
+        D=A
+
+        @{end_frame_var_name}
+        D=M-D
+
+        @temp_var_lcl
+        A=D
+        D=M
+
+        @LCL
+        M=D
+        """
+        goto_return_address = f"""
+        @{return_address_var_name}
+        A=M
+        0;JMP
+        """
+        return [
+            get_end_frame
+            + get_return_address
+            + pop_top_value_to_arg
+            + reposition_sp
+            + recover_that
+            + recover_this
+            + recover_arg
+            + recover_lcl
+            + goto_return_address
+        ]
