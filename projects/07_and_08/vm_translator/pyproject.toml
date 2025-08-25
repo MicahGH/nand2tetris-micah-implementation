@@ -10,6 +10,7 @@ dependencies = [
     "fire (>=0.7.0,<0.8.0)",
     "pydantic (>=2.11.7,<3.0.0)"
 ]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -19,3 +20,12 @@ build-backend = "poetry.core.masonry.api"
 ruff = "^0.12.3"
 black = "^25.1.0"
 
+[tool.ruff]
+line-length = 105
+[lint.select]
+select = ["ALL"]
+[lint.ignore]
+ignore = ["D101", "D104", "D102", "D100", "S112", "BLE001", "RUF005"]
+
+[tool.black]
+line-length = 105
